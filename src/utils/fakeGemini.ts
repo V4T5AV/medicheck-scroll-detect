@@ -1,4 +1,3 @@
-
 /**
  * ClusteringResult type is reused for both fake and real results.
  */
@@ -35,15 +34,10 @@ export async function fakeGeminiDetect(image: File): Promise<ClusteringResult> {
 
 /**
  * Calls Gemini API with the provided API key and image file.
- * You must have access to the Gemini Vision API (https://ai.google.dev/gemini-api/docs/get-started)
+ * Uses the latest Gemini 1.5 API (https://ai.google.dev/gemini-api/docs/api/generate-content)
  */
 export async function realGeminiDetect(image: File, apiKey: string): Promise<ClusteringResult> {
-  // Compose the multipart payload for Gemini Vision API. We'll use the "multimodal" endpoint.
-  // We'll ask Gemini: "Is this medicine fake or genuine? Give a confidence score (0-1) and a one-line summary."
-  // API: https://generativelanguage.googleapis.com/v1/models/gemini-pro-vision:generateContent?key={API_KEY}
-  // Docs: https://ai.google.dev/gemini-api/docs/api/generate-content
-
-  // Convert file to base64
+  // Helper function to convert file to base64
   const fileToBase64 = (file: File) =>
     new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
@@ -54,16 +48,18 @@ export async function realGeminiDetect(image: File, apiKey: string): Promise<Clu
 
   const imageBase64 = await fileToBase64(image);
 
+  // Gemini 1.5 expects the prompt and image in `contents`
   const contents = [
     {
+      role: "user",
       parts: [
         {
           text:
             "You are a medicine authenticity checker. The following image is a photo of a packaged pharmaceutical product. Only answer in concise JSON: {\"medicineType\":\"Genuine\"|\"Fake\",\"confidence\":float between 0 and 1,\"summary\":string explanation}. Is this medicine FAKE or GENUINE? Give your best estimate based on visual clues and counterfeiting patterns."
         },
         {
-          inlineData: {
-            mimeType: image.type,
+          inline_data: {
+            mime_type: image.type,
             data: imageBase64,
           },
         },
@@ -71,14 +67,13 @@ export async function realGeminiDetect(image: File, apiKey: string): Promise<Clu
     },
   ];
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1/models/gemini-pro-vision:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents }),
-    }
-  );
+  const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contents }),
+  });
 
   if (!response.ok) {
     const error = await response.text();
@@ -86,7 +81,7 @@ export async function realGeminiDetect(image: File, apiKey: string): Promise<Clu
   }
 
   const data = await response.json();
-  // Gemini responds with .candidates[0].content.parts[0].text, which should be the JSON output.
+  // According to docs, the answer may be in data.candidates[0].content.parts[0].text (for Gemini 1.5)
   const geminiText: string | undefined =
     data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
@@ -101,7 +96,6 @@ export async function realGeminiDetect(image: File, apiKey: string): Promise<Clu
     throw new Error("Could not parse Gemini JSON response: " + geminiText);
   }
 
-  // Fallbacks just in case values are missing
   if (
     typeof resultJson.medicineType !== "string" ||
     typeof resultJson.confidence !== "number" ||
