@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import HeroSection from "../components/HeroSection";
 import MedicineDropzone from "../components/MedicineDropzone";
@@ -5,17 +6,19 @@ import AnimatedSection from "../components/ui/AnimatedSection";
 import ImageAnalysis from "../components/ImageAnalysis";
 import { fakeGeminiDetect, realGeminiDetect, ClusteringResult } from "../utils/fakeGemini";
 
+const GEMINI_API_KEY = "AIzaSyBYtqx1zqn1E7X6a46Yl08JDzv_6_5nWw8"; // HIDDEN: Use this key automatically; do not display
+
 const Index = () => {
   const [uploaded, setUploaded] = useState<File | null>(null);
   const [result, setResult] = useState<ClusteringResult | null>(null);
   const [loading, setLoading] = useState(false);
-  const [geminiApiKey, setGeminiApiKey] = useState<string>(() => localStorage.getItem("gemini_api_key") || "");
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // Save API key to local storage upon change
+  // On mount, save the API key to localStorage to prevent showing in UI
   useEffect(() => {
-    if (geminiApiKey) localStorage.setItem("gemini_api_key", geminiApiKey);
-  }, [geminiApiKey]);
+    // Save to localStorage (hidden, not shown in UI)
+    if (GEMINI_API_KEY) localStorage.setItem("gemini_api_key", GEMINI_API_KEY);
+  }, []);
 
   async function handleImage(file: File) {
     setUploaded(file);
@@ -23,12 +26,8 @@ const Index = () => {
     setApiError(null);
     setLoading(true);
     try {
-      let res: ClusteringResult;
-      if (geminiApiKey) {
-        res = await realGeminiDetect(file, geminiApiKey);
-      } else {
-        res = await fakeGeminiDetect(file); // fallback to mock if no key
-      }
+      // Always use the real Gemini API with the key
+      const res = await realGeminiDetect(file, GEMINI_API_KEY);
       setResult(res);
     } catch (err: any) {
       setApiError(
@@ -60,32 +59,7 @@ const Index = () => {
               Powered by latest AI and deep clustering.
             </span>
           </div>
-
-          {/* Gemini API Key input */}
-          <div className="mb-4 w-full max-w-md">
-            <label className="block text-xs font-semibold text-gray-600 mb-1">
-              Gemini API Key
-            </label>
-            <input
-              type="password"
-              value={geminiApiKey}
-              onChange={(e) => setGeminiApiKey(e.target.value)}
-              placeholder="Paste your Gemini API Key here..."
-              className="w-full px-3 py-2 border border-cyan-200 rounded focus:outline-none focus:border-cyan-400 text-xs"
-              autoComplete="off"
-            />
-            <span className="text-[10px] text-gray-400 pl-1">
-              <a
-                href="https://ai.google.dev/gemini-api/docs/api-key"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline text-cyan-600 hover:text-cyan-900"
-              >
-                Where to get an API key?
-              </a>
-            </span>
-          </div>
-
+          {/* Gemini API Key input has been removed/hidden as per user request */}
           {apiError && (
             <div className="mb-2 w-full max-w-md">
               <div className="text-xs text-red-600 bg-red-50 rounded p-2 font-mono">
@@ -115,3 +89,4 @@ const Index = () => {
 };
 
 export default Index;
+
