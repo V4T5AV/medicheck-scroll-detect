@@ -51,7 +51,7 @@ const Index = () => {
       <footer className="w-full border-t mt-32 py-8 bg-white/90 flex flex-col md:flex-row gap-2 items-center justify-between px-6">
         <span className="text-xs text-gray-400">&copy; {new Date().getFullYear()} Fake Medicine Detection Demo</span>
         <span className="text-xs text-gray-300">
-          Deep Learning Clustering UI &bull; <a className="underline text-cyan-600 hover:text-cyan-800" href="https://lovable.dev/" target="_blank" rel="noopener noreferrer">Made with Lovable</a>
+          Deep Learning Clustering UI
         </span>
       </footer>
     </main>
