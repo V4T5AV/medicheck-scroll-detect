@@ -1,73 +1,174 @@
-# Welcome to your Lovable project
+# Fake Medicine Detector
 
-## Project info
+A web application that helps detect counterfeit medicines using image analysis and machine learning. This project provides a user-friendly interface for uploading medicine images and getting instant analysis results.
 
-**URL**: https://lovable.dev/projects/04603770-4dd1-45a9-8a43-766b5bc5fe1d
+## Features
 
-## How can I edit this code?
+- 📸 Image upload and analysis
+- 🔍 Real-time medicine verification
+- 📊 Confidence scoring system
+- 📱 Responsive design
+- 🔒 Secure MongoDB storage
+- 🚀 Fast and efficient processing
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Frontend:**
+  - HTML5
+  - CSS3
+  - JavaScript (ES6+)
+  - Modern UI/UX design
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/04603770-4dd1-45a9-8a43-766b5bc5fe1d) and start prompting.
+- **Backend:**
+  - Node.js
+  - Express.js
+  - MongoDB
+  - Multer (for file handling)
 
-Changes made via Lovable will be committed automatically to this repo.
+## Prerequisites
 
-**Use your preferred IDE**
+Before you begin, ensure you have the following installed:
+- Node.js (v14 or higher)
+- MongoDB (v4.4 or higher)
+- npm (Node Package Manager)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/Fake_medicine_detector.git
+cd Fake_medicine_detector
 ```
 
-**Edit a file directly in GitHub**
+2. Install dependencies:
+```bash
+npm install
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. Set up MongoDB:
+   - Make sure MongoDB is running on your system
+   - The application will connect to `mongodb://localhost:27017/medicine_detector`
 
-**Use GitHub Codespaces**
+4. Start the server:
+```bash
+node backend/app.js
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+5. Open the application:
+   - Navigate to `http://localhost:3000` in your web browser
 
-## What technologies are used for this project?
+## Project Structure
 
-This project is built with:
+```
+Fake_medicine_detector/
+├── src/                    # Frontend source code
+│   ├── components/         # React components
+│   ├── pages/             # Page components
+│   ├── context/           # React context
+│   ├── utils/             # Utility functions
+│   ├── styles.css         # Global styles
+│   ├── App.tsx           # Main App component
+│   └── main.tsx          # Entry point
+├── backend/               # Backend server (Express.js)
+│   ├── routes/           # API routes
+│   ├── middleware/       # Express middleware
+│   ├── models/           # Database models
+│   ├── services/         # Business logic
+│   └── config/           # Configuration files
+├── ml_model/             # Machine Learning models
+│   ├── MODELS/           # Trained models
+│   └── real_medicines/   # Training data
+├── .venv/                # Python virtual environment
+├── node_modules/         # Node.js dependencies
+├── public/              # Static files
+└── package.json         # Node.js project configuration
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Setup Instructions
 
-## How can I deploy this project?
+1. **Frontend Setup**
+   ```bash
+   npm install
+   npm run dev
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/04603770-4dd1-45a9-8a43-766b5bc5fe1d) and click on Share -> Publish.
+2. **Backend Setup**
+   ```bash
+   cd backend
+   npm install
+   npm start
+   ```
 
-## Can I connect a custom domain to my Lovable project?
+3. **ML Model Setup**
+   ```bash
+   cd ml_model
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
 
-Yes, you can!
+## Environment Variables
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Create a `.env` file in the root directory with the following variables:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```
+MONGODB_URI=your_mongodb_uri
+PORT=3000
+```
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+
+## API Endpoints
+
+- `GET /api/test` - Test backend connection
+- `POST /api/upload` - Upload medicine image
+- `GET /api/medicines` - Get all uploaded medicines
+- `GET /api/medicines/:id` - Get specific medicine image
+
+## Usage
+
+1. Open the application in your web browser
+2. Click "Choose Medicine Image" to select an image
+3. Click "Upload and Analyze" to process the image
+4. View the analysis results and confidence score
+5. Browse previously uploaded images in the gallery
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## Security
+
+- All uploaded images are stored securely in MongoDB
+- File type validation ensures only image files are processed
+- CORS is enabled for secure cross-origin requests
+
+## Future Enhancements
+
+- [ ] Implement machine learning model for better detection
+- [ ] Add user authentication
+- [ ] Support for batch image processing
+- [ ] Detailed analysis reports
+- [ ] Mobile application version
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Thanks to all contributors who have helped shape this project
+- Special thanks to the open-source community for their invaluable tools and libraries
+
+## Contact
+
+Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
+Project Link: [https://github.com/yourusername/Fake_medicine_detector](https://github.com/yourusername/Fake_medicine_detector) 
